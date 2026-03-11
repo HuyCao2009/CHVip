@@ -16,9 +16,5 @@ module.exports = function() {
 	new CronJob('0 35 18 * * *', function() {
 		XSMB_trathuong();
 	}, null, true, 'Asia/Ho_Chi_Minh');
-
-	new CronJob('*/60 * * * * *', function() {
-		TaiXiu();
-	}, null, true, 'Asia/Ho_Chi_Minh');
-}
+	
 
