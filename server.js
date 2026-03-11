@@ -16,7 +16,11 @@ app.use(cors({
     origin: '*',
     optionsSuccessStatus: 200
 }));
-let port       = process.env.PORT || 80;
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log("Server listen on port", PORT);
+});
 let expressWs  = require('express-ws')(app);
 let bodyParser = require('body-parser');
 var morgan = require('morgan');
@@ -56,4 +60,5 @@ require('./config/crontextchatdata')(); // copy text chat
 require('./config/cronchattx')(redT);// boot chat tài xiu
 app.listen(port, function() {
     console.log("Server listen on port ", port);
+
 });
