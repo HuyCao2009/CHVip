@@ -2,7 +2,6 @@ let CronJob = require('cron').CronJob;
 let CronHu          = require('../app/Cron/EventHu');
 let XSMB            = require('../app/Cron/XSMB/XSMB');
 let XSMB_trathuong  = require('../app/Cron/XSMB/XSMB_trathuong');
-let TaiXiu          = require('../app/Cron/TaiXiu');
 
 module.exports = function() {
 
@@ -22,3 +21,4 @@ module.exports = function() {
 		TaiXiu();
 	}, null, true, 'Asia/Ho_Chi_Minh');
 }
+
