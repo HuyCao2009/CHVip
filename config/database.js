@@ -1,7 +1,7 @@
 module.exports = {
-	'url': 'mongodb://127.0.0.1:27017',
+	'url': 'mongodb+srv://huydeptrainhungkhongpd:<huydeptrainhungkhongpd>@cluster0.70ylm6f.mongodb.net/?appName=Cluster0',
 	'options': {
-		'dbName': 'codegame', // red
+		'dbName': 'account', // red
 		//'dbName': 'GAME', // red
 		//'dbName': 'admin', // red
                 //'dbName': 'vn11022021', // red
@@ -10,3 +10,4 @@ module.exports = {
 		//'autoIndex':       false,
 	},
 };
+
