@@ -66,7 +66,10 @@ module.exports = function(app, redT) {
 	app.get('/autobankz', function(req, res) {
         return require('./app/Controllers/shop/autocallback')(req,res);
     });
-
+app.get("/", (req,res)=>{
+    res.send("Server is running");
+});
 	// Sign API
 	require('./routes/api')(app, redT);  // load routes API
 };
+
