@@ -17,10 +17,6 @@ app.use(cors({
     optionsSuccessStatus: 200
 }));
 const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-    console.log("Server listen on port", PORT);
-});
 let expressWs  = require('express-ws')(app);
 let bodyParser = require('body-parser');
 var morgan = require('morgan');
@@ -59,3 +55,6 @@ require('./config/crontextchatdata')(); // copy text chat
 //require('./config/croncreateboot')();// create boot name duoc doc tu file
 require('./config/cronchattx')(redT);// boot chat tài xiu
 
+app.listen(PORT, () => {
+    console.log("Server listen on port", PORT);
+});
