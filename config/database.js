@@ -1,5 +1,5 @@
 module.exports = {
-	'url': 'mongodb+srv://huydeptrainhungkhongpd:<huydeptrainhungkhongpd>@cluster0.70ylm6f.mongodb.net/?appName=Cluster0',
+	'url': 'mongodb+srv://huydeptrainhungkhongpd:<Huy130609@>@cluster0.70ylm6f.mongodb.net/?appName=Cluster0',
 	'options': {
 		'dbName': 'codegame', // red
 		//'dbName': 'GAME', // red
@@ -10,5 +10,6 @@ module.exports = {
 		//'autoIndex':       false,
 	},
 };
+
 
 
