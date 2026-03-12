@@ -16,7 +16,6 @@ app.use(cors({
     origin: '*',
     optionsSuccessStatus: 200
 }));
-const PORT = process.env.PORT || 3000;
 let expressWs  = require('express-ws')(app);
 let bodyParser = require('body-parser');
 var morgan = require('morgan');
@@ -37,6 +36,7 @@ app.set('view engine', 'ejs'); // chỉ định view engine là ejs
 app.set('views', './views');   // chỉ định thư mục view
 // Serve static html, js, css, and image files from the 'public' directory
 app.use(express.static('public'));
+const PORT = process.env.PORT || 3000;
 // server socket
 let redT = expressWs.getWss();
 process.redT = redT;
@@ -58,3 +58,4 @@ require('./config/cronchattx')(redT);// boot chat tài xiu
 app.listen(PORT, () => {
     console.log("Server listen on port", PORT);
 });
+
