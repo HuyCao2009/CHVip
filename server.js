@@ -25,8 +25,13 @@ let mongoose = require('mongoose');
 require('mongoose-long')(mongoose); // INT 64bit
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex',   true);
-mongoose.connect(configDB.url, configDB.options); // kết nối tới database
-// cấu hình tài khoản admin mặc định và các dữ liệu mặc định
+mongoose.connect(configDB.url, configDB.options)
+.then(() => {
+    console.log("MongoDB connected");
+})
+.catch(err => {
+    console.log("MongoDB error:", err);
+});
 require('./config/admin');
 // đọc dữ liệu from
 app.use(bodyParser.json());
@@ -58,5 +63,6 @@ require('./config/cronchattx')(redT);// boot chat tài xiu
 app.listen(PORT, () => {
     console.log("Server listen on port", PORT);
 });
+
 
 
