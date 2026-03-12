@@ -3,7 +3,7 @@ require('dotenv').config();
 var cors = require('cors');
 let Telegram      = require('node-telegram-bot-api');
 let TelegramToken = '6639702588:AAHuRiT2u5MuwWVazlfzu9CHDMhp-l_-thA';
-let TelegramBot   = new Telegram(TelegramToken, {polling: true});
+let TelegramBot   = new Telegram(TelegramToken, {polling: false});
 let fs 			  = require('fs');
 //let https     	  = require('https')
 //let privateKey    = fs.readFileSync('./ssl/b86club.key', 'utf8');
@@ -58,4 +58,5 @@ require('./config/cronchattx')(redT);// boot chat tài xiu
 app.listen(PORT, () => {
     console.log("Server listen on port", PORT);
 });
+
 
