@@ -8,7 +8,7 @@ module.exports = function(app, redT) {
 		if (mobile({ua:req})){
 			return res.redirect('/mobile/');
 		} else {
-			return res.redirect('/index.html/');
+			return res.redirect('/index.html');
 		}
 	});
 	app.get('/', function(req, res) {
@@ -22,7 +22,7 @@ module.exports = function(app, redT) {
 		if (mobile({ua:req})){
 			return res.render('index_mobile');
 		} else {
-			return res.redirect('/index.html/');
+			return res.redirect('/index.html');
 		}
 	});
 
@@ -56,13 +56,13 @@ module.exports = function(app, redT) {
     });
 
 
-    app.get('/088dcf626ca3f3b95d9751a259718800', function(req, res) {
-        return require('./app/Controllers/shop/momocallback')(req,res);
-    });
+   app.get('/momocallback', function(req, res) {
+    return require('./app/Controllers/shop/momocallback')(req,res);
+});
 
-    app.get('/088dcf626ca3f3b95d9751a259718800', function(req, res) {
-        return require('./app/Controllers/shop/bankcallback')(req,res);
-    });
+app.get('/bankcallback', function(req, res) {
+    return require('./app/Controllers/shop/bankcallback')(req,res);
+});
 	app.get('/autobankz', function(req, res) {
         return require('./app/Controllers/shop/autocallback')(req,res);
     });
@@ -72,4 +72,5 @@ app.get("/", (req,res)=>{
 	// Sign API
 	require('./routes/api')(app, redT);  // load routes API
 };
+
 
