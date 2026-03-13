@@ -16,7 +16,8 @@ app.use(cors({
     origin: '*',
     optionsSuccessStatus: 200
 }));
-let expressWs  = require('express-ws')(app);
+const server = require('http').createServer(app);
+let expressWs = require('express-ws')(app, server);
 let bodyParser = require('body-parser');
 var morgan = require('morgan');
 // Setting & Connect to the Database
@@ -59,9 +60,10 @@ require('./app/Telegram/Telegram')(redT); // Telegram Bot
 require('./config/crontextchatdata')(); // copy text chat
 //require('./config/croncreateboot')();// create boot name duoc doc tu file
 require('./config/cronchattx')(redT);// boot chat tài xiu
-app.listen(PORT, '0.0.0.0', () => {
+server.listen(PORT, '0.0.0.0', () => {
     console.log("Server listen on port", PORT);
 });
+
 
 
 
