@@ -1,69 +1,90 @@
-﻿
 require('dotenv').config();
-var cors = require('cors');
-let Telegram      = require('node-telegram-bot-api');
-let TelegramToken = '6639702588:AAHuRiT2u5MuwWVazlfzu9CHDMhp-l_-thA';
-let TelegramBot   = new Telegram(TelegramToken, {polling: false});
-let fs 			  = require('fs');
-//let https     	  = require('https')
-//let privateKey    = fs.readFileSync('./ssl/b86club.key', 'utf8');
-//let certificate   = fs.readFileSync('./ssl/b86club.pem', 'utf8');
-//let credentials   = {key: privateKey, cert: certificate};
-let express       = require('express');
-let app           = express();
-//let server 	  	  = https.createServer(credentials, app);
+
+const cors = require('cors');
+const express = require('express');
+const http = require('http');
+const Telegram = require('node-telegram-bot-api');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const mongoose = require('mongoose');
+
+require('mongoose-long')(mongoose);
+
+const app = express();
+const server = http.createServer(app);
+
+// Websocket
+require('express-ws')(app, server);
+
+// ================= TELEGRAM =================
+const TelegramToken = process.env.TELEGRAM_TOKEN || '6639702588:AAHuRiT2u5MuwWVazlfzu9CHDMhp-l_-thA';
+const TelegramBot = new Telegram(TelegramToken, { polling: false });
+
+// ================= CORS =================
 app.use(cors({
-    origin: '*',
-    optionsSuccessStatus: 200
+origin: '*',
+optionsSuccessStatus: 200
 }));
-const server = require('http').createServer(app);
-let expressWs = require('express-ws')(app, server);
-let bodyParser = require('body-parser');
-var morgan = require('morgan');
-// Setting & Connect to the Database
-let configDB = require('./config/database');
-let mongoose = require('mongoose');
-require('mongoose-long')(mongoose); // INT 64bit
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex',   true);
+
+// ================= DATABASE =================
+const configDB = require('./config/database');
+
 mongoose.connect(configDB.url, configDB.options)
 .then(() => {
-    console.log("MongoDB connected");
+console.log("MongoDB connected");
 })
 .catch(err => {
-    console.log("MongoDB error:", err);
+console.log("MongoDB error:", err);
 });
+
+// ================= ADMIN =================
 require('./config/admin');
-// đọc dữ liệu from
+
+// ================= MIDDLEWARE =================
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('combined'));
-app.set('view engine', 'ejs'); // chỉ định view engine là ejs
-app.set('views', './views');   // chỉ định thư mục view
-// Serve static html, js, css, and image files from the 'public' directory
+
+// ================= VIEW =================
+app.set('view engine', 'ejs');
+app.set('views', './views');
+
+// ================= STATIC =================
 app.use(express.static('public'));
+
+// ================= PORT =================
 const PORT = process.env.PORT || 3000;
-// server socket
-let redT = expressWs.getWss();
+
+// ================= SOCKET SERVER =================
+const redT = app.get('wss');
+
 process.redT = redT;
 redT.telegram = TelegramBot;
+
 global['redT'] = redT;
 global['userOnline'] = 0;
-require('./app/Helpers/socketUser')(redT); // Add function socket
-require('./routerHttp')(app, redT);   // load các routes HTTP
-require('./routerCMS')(app, redT);	//load routes CMS
-require('./routerSocket')(app, redT); // load các routes WebSocket
-require('./app/Cron/taixiu')(redT);   // Chạy game Tài Xỉu
-require('./app/Cron/baucua')(redT);   // Chạy game Bầu Cua
+
+// ================= SOCKET FUNCTIONS =================
+require('./app/Helpers/socketUser')(redT);
+
+// ================= ROUTERS =================
+require('./routerHttp')(app, redT);
+require('./routerCMS')(app, redT);
+require('./routerSocket')(app, redT);
+
+// ================= GAME CRON =================
+require('./app/Cron/taixiu')(redT);
+require('./app/Cron/baucua')(redT);
+
+// ================= OTHER CRON =================
 require('./config/cron')();
-require('./app/Telegram/Telegram')(redT); // Telegram Bot
-require('./config/crontextchatdata')(); // copy text chat
-//require('./config/croncreateboot')();// create boot name duoc doc tu file
-require('./config/cronchattx')(redT);// boot chat tài xiu
+require('./config/crontextchatdata')();
+require('./config/cronchattx')(redT);
+
+// ================= TELEGRAM =================
+require('./app/Telegram/Telegram')(redT);
+
+// ================= START SERVER =================
 server.listen(PORT, '0.0.0.0', () => {
-    console.log("Server listen on port", PORT);
+console.log("Server running on port", PORT);
 });
-
-
-
-
