@@ -13,8 +13,9 @@ require('mongoose-long')(mongoose);
 const app = express();
 const server = http.createServer(app);
 
-// Websocket
-require('express-ws')(app, server);
+// ================= WEBSOCKET =================
+const expressWs = require('express-ws')(app, server);
+const redT = expressWs.getWss();
 
 // ================= TELEGRAM =================
 const TelegramToken = process.env.TELEGRAM_TOKEN || '6639702588:AAHuRiT2u5MuwWVazlfzu9CHDMhp-l_-thA';
@@ -45,26 +46,21 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('combined'));
 
-// ================= VIEW =================
+// ================= VIEW ENGINE =================
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
 // ================= STATIC =================
 app.use(express.static('public'));
 
-// ================= PORT =================
-const PORT = process.env.PORT || 3000;
-
-// ================= SOCKET SERVER =================
-const redT = app.get('wss');
-
+// ================= GLOBAL SOCKET =================
 process.redT = redT;
+global.redT = redT;
+global.userOnline = 0;
+
 redT.telegram = TelegramBot;
 
-global['redT'] = redT;
-global['userOnline'] = 0;
-
-// ================= SOCKET FUNCTIONS =================
+// ================= SOCKET HELPER =================
 require('./app/Helpers/socketUser')(redT);
 
 // ================= ROUTERS =================
@@ -72,11 +68,11 @@ require('./routerHttp')(app, redT);
 require('./routerCMS')(app, redT);
 require('./routerSocket')(app, redT);
 
-// ================= GAME CRON =================
+// ================= GAME =================
 require('./app/Cron/taixiu')(redT);
 require('./app/Cron/baucua')(redT);
 
-// ================= OTHER CRON =================
+// ================= CRON =================
 require('./config/cron')();
 require('./config/crontextchatdata')();
 require('./config/cronchattx')(redT);
@@ -85,6 +81,8 @@ require('./config/cronchattx')(redT);
 require('./app/Telegram/Telegram')(redT);
 
 // ================= START SERVER =================
+const PORT = process.env.PORT || 3000;
+
 server.listen(PORT, '0.0.0.0', () => {
 console.log("Server running on port", PORT);
 });
